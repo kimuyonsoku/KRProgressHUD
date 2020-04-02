@@ -65,6 +65,7 @@ public enum KRProgressHUDStyle {
 /// KRProgressHUD is a beautiful and easy-to-use progress HUD.
 public final class KRProgressHUD {
     public typealias CompletionHandler = () -> Void
+    public typealias TouchEventHandler = () -> Void
 
     public class KRProgressHUDAppearance {
         /// Default style.
@@ -123,6 +124,7 @@ public final class KRProgressHUD {
     var dismissHandler: DispatchWorkItem?
     weak var appWindow: UIWindow?
     weak var presentingViewController: UIViewController?
+    var touchEventHandler: TouchEventHandler?
 
     /// This have whether HUD is indicated.
     public internal(set) static var isVisible = false
@@ -261,9 +263,10 @@ extension KRProgressHUD {
     ///
     /// - Parameters:
     ///   - message: HUD's message.
+    ///   - touchEventCallback: touch Event Callback
     ///   - completion: Handler when showing is completed.
-    public static func show(withMessage message: String? = nil, completion: CompletionHandler? = nil) {
-        shared.show(withMessage: message, isLoading: true, completion: completion)
+    public static func show(withMessage message: String? = nil, touchEventCallback: TouchEventHandler? = nil, completion: CompletionHandler? = nil) {
+        shared.show(withMessage: message, isLoading: true, touchEventCallback: touchEventCallback, completion: completion)
     }
 
     /// Shows the HUD with success glyph.

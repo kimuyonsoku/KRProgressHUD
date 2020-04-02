@@ -24,6 +24,8 @@ extension KRProgressHUD {
         hudView.backgroundColor = .white
         hudView.layer.cornerRadius = 10
         hudView.translatesAutoresizingMaskIntoConstraints = false
+        hudView.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                            action: #selector(self.tappedProgressHUD)))
 
         iconView.backgroundColor = .clear
         iconView.isHidden = false
@@ -72,7 +74,9 @@ extension KRProgressHUD {
               imageSize: CGSize? = nil,
               isOnlyText: Bool = false,
               isLoading: Bool = false,
+              touchEventCallback: TouchEventHandler? = nil,
               completion: CompletionHandler? = nil) {
+        self.touchEventHandler = touchEventCallback
         DispatchQueue.main.async { [unowned self] in
             self.applyStyles()
             self.updateLayouts(message: message, iconType: iconType, image: image, imageSize: imageSize, isOnlyText: isOnlyText)
@@ -87,9 +91,14 @@ extension KRProgressHUD {
     }
 
     func dismiss(completion: CompletionHandler?) {
+        self.touchEventHandler = nil
         DispatchQueue.main.async { [unowned self] in
             self.fadeOutView(completion: completion)
         }
+    }
+
+    @objc func tappedProgressHUD() {
+        touchEventHandler?()
     }
 }
 
